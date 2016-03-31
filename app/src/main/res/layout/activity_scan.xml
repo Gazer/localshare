@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true">
+
+    <ar.com.p39.localshare.receiver.ui.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <ar.com.p39.localshare.receiver.ui.GraphicOverlay
+            android:id="@+id/graphicOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ar.com.p39.localshare.receiver.ui.GraphicOverlay
+            android:id="@+id/areaOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </ar.com.p39.localshare.receiver.ui.CameraSourcePreview>
+</LinearLayout>

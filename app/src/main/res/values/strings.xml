@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LocalShare</string>
+    <string name="low_storage_error">Low storage</string>
+    <string name="ok">Ok</string>
+    <string name="no_camera_permission">Please give camera permission</string>
+    <string name="title_activity_share">ShareActivity</string>
+</resources>
