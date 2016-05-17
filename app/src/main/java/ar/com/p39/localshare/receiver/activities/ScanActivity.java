@@ -1,4 +1,4 @@
-package ar.com.p39.localshare.receiver;
+package ar.com.p39.localshare.receiver.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,13 +28,15 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 import ar.com.p39.localshare.R;
+import ar.com.p39.localshare.receiver.ui.BarcodeSharerTracker;
 import ar.com.p39.localshare.receiver.ui.ScanAreaGraphic;
 import ar.com.p39.localshare.receiver.ui.BarcodeGraphic;
 import ar.com.p39.localshare.receiver.ui.BarcodeTrackerFactory;
 import ar.com.p39.localshare.receiver.ui.CameraSourcePreview;
 import ar.com.p39.localshare.receiver.ui.GraphicOverlay;
 
-public class ScanActivity extends AppCompatActivity {
+
+public class ScanActivity extends AppCompatActivity implements BarcodeSharerTracker.SharerBarcodeDetectedListener {
 
     private static final String TAG = "Barcode";
     // intent request code to handle updating play services if needed.
@@ -55,15 +58,7 @@ public class ScanActivity extends AppCompatActivity {
         areaOverlay = (GraphicOverlay<ScanAreaGraphic>) findViewById(R.id.areaOverlay);
 
         areaOverlay.add(new ScanAreaGraphic(areaOverlay));
-//        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this)
-//                .setBarcodeFormats(Barcode.DATA_MATRIX | Barcode.QR_CODE)
-//                .build();
-//
-//        cameraSource = new CameraSource.Builder(this, barcodeDetector)
-//                .setAutoFocusEnabled(true)
-//                .setFacing(CameraSource.CAMERA_FACING_BACK)
-//                .setRequestedPreviewSize(320, 200)
-//                .build();
+
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
@@ -92,7 +87,7 @@ public class ScanActivity extends AppCompatActivity {
         // graphics for each barcode on screen.  The factory is used by the multi-processor to
         // create a separate tracker instance for each barcode.
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
-        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(graphicOverlay);
+        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(this);
         barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
 
         if (!barcodeDetector.isOperational()) {
@@ -267,5 +262,15 @@ public class ScanActivity extends AppCompatActivity {
                 cameraSource = null;
             }
         }
+    }
+
+    @Override
+    public void onSharerDetected(@NonNull String url) {
+        Snackbar.make(preview, url, Snackbar.LENGTH_SHORT).show();
+        //preview.stop();
+        Intent i = new Intent(this, DownloadActivity.class);
+        i.putExtra("url", url);
+        startActivity(i);
+        finish();
     }
 }

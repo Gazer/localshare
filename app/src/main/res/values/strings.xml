@@ -3,5 +3,6 @@
     <string name="low_storage_error">Low storage</string>
     <string name="ok">Ok</string>
     <string name="no_camera_permission">Please give camera permission</string>
-    <string name="title_activity_share">ShareActivity</string>
+    <string name="title_activity_share">Wifi Share</string>
+    <string name="please_scan_the_code">Scan the QR code with another devices to copy content from this device.</string>
 </resources>

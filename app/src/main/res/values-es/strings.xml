@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LocalShare</string>
+    <string name="low_storage_error">Almacenamiento bajo</string>
+    <string name="no_camera_permission">Por favor de permisos para usar la cámara</string>
+    <string name="ok">Ok</string>
+    <string name="please_scan_the_code">Por favor escaneá el código con el teléfono de tu amigo</string>
+    <string name="title_activity_share">Compartir por Wifi</string>
+</resources>
