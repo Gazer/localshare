@@ -9,6 +9,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:scaleType="centerCrop"
+        android:contentDescription="@string/preview"
         tools:src="@drawable/ic_cast_light" />
 
     <TextView

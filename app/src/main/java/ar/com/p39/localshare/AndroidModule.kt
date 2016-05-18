@@ -1,9 +1,11 @@
-package ar.com.p39.localshare.receiver
+package ar.com.p39.localshare
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.net.wifi.WifiManager
 import ar.com.p39.localshare.presenters.DownloadPresenter
+import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
@@ -31,6 +33,13 @@ class AndroidModule(private val application: Application) {
     fun provideDownloadPresenter(): DownloadPresenter {
         return DownloadPresenter()
     }
+
+    @Provides
+    @Singleton
+    fun provideSharePresenter(intent: Intent): SharePresenter {
+        return SharePresenter(intent)
+    }
+
 
     @Provides
     fun provideWifiMananger(): WifiManager {

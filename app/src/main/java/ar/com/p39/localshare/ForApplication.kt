@@ -1,4 +1,4 @@
-package ar.com.p39.localshare.receiver
+package ar.com.p39.localshare
 
 import javax.inject.Qualifier
 

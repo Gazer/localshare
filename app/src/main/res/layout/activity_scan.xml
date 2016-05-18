@@ -5,13 +5,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true">
+    android:keepScreenOn="true"
+    android:padding="@dimen/activity_horizontal_margin">
 
     <ar.com.p39.localshare.receiver.ui.CameraSourcePreview
         android:id="@+id/preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/activity_horizontal_margin">
+        android:layout_height="match_parent">
 
         <ar.com.p39.localshare.receiver.ui.GraphicOverlay
             android:id="@+id/graphicOverlay"
@@ -24,4 +24,5 @@
             android:layout_height="match_parent" />
 
     </ar.com.p39.localshare.receiver.ui.CameraSourcePreview>
+
 </LinearLayout>

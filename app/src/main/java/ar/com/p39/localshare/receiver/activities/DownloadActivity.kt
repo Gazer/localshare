@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import ar.com.p39.localshare.R
 import ar.com.p39.localshare.presenters.DownloadPresenter
-import ar.com.p39.localshare.receiver.MyApplication
+import ar.com.p39.localshare.MyApplication
 import ar.com.p39.localshare.receiver.adapters.DownloadFileAdapter
 import ar.com.p39.localshare.receiver.models.DownloadFile
 import ar.com.p39.localshare.receiver.views.DownloadView

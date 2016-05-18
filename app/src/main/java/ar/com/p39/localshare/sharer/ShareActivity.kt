@@ -22,6 +22,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import ar.com.p39.localshare.MyApplication
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -49,11 +50,13 @@ class ShareActivity : AppCompatActivity(), ShareView {
     private var dataView: TextView? = null
     private var qr: QRImageView? = null
 
-    internal var presenter: SharePresenter? = null
+    lateinit var presenter: SharePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share)
+
+        MyApplication.graph.inject(this)
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
@@ -61,8 +64,7 @@ class ShareActivity : AppCompatActivity(), ShareView {
         dataView = findViewById(R.id.files) as TextView?
         qr = findViewById(R.id.qr) as QRImageView?
 
-        presenter = SharePresenter(intent)
-        presenter!!.bindView(this)
+        presenter.bindView(this)
 
         readWifiStatus()
     }
@@ -74,7 +76,7 @@ class ShareActivity : AppCompatActivity(), ShareView {
         var wifiManager = getSystemService (Context.WIFI_SERVICE) as WifiManager;
         var info = wifiManager.getConnectionInfo ();
 
-        presenter!!.checkWifiStatus(wifi.isConnected, info.bssid)
+        presenter.checkWifiStatus(wifi.isConnected, info.bssid)
     }
 
     protected fun wifiIpAddress(context: Context): String {
@@ -155,7 +157,7 @@ class ShareActivity : AppCompatActivity(), ShareView {
     private fun shareFiles(files: List<FileShare>) {
         val ip = wifiIpAddress(this)
 
-        presenter!!.startSharing(ip, files)
+        presenter.startSharing(ip, files)
 
         qr!!.setData("http://$ip:8080/sharer")
 
@@ -174,6 +176,6 @@ class ShareActivity : AppCompatActivity(), ShareView {
 
     override fun onStop() {
         super.onStop()
-        presenter!!.stopSharing()
+        presenter.stopSharing()
     }
 }
