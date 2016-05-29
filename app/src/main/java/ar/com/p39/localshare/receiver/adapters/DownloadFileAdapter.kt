@@ -31,12 +31,20 @@ class DownloadFileAdapter(val picasso: Picasso, var files:List<DownloadFile>) : 
         val item = files[position]
         if (holder != null) {
             holder.fileName.text = item.name
-            picasso.load("http://192.168.0.104:8080/get/$position").error(R.drawable.ic_error).into(holder.imageView)
+            picasso.load(item.url).resize(200, 200).error(R.drawable.ic_error).into(holder.imageView)
+            if (item.status == 1) {
+                holder.statusImage.setImageResource(R.drawable.ic_downloading)
+            } else if (item.status == 2) {
+                holder.statusImage.setImageResource(R.drawable.ic_downloaded)
+            } else {
+                holder.statusImage.setImageBitmap(null)
+            }
         }
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val fileName: TextView by bindView(R.id.name)
         val imageView: ImageView by bindView(R.id.image)
+        val statusImage: ImageView by bindView(R.id.status)
     }
 }

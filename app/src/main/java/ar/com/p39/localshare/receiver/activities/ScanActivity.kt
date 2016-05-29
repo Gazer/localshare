@@ -14,6 +14,8 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -28,13 +30,16 @@ import com.google.android.gms.vision.barcode.BarcodeDetector
 import java.io.IOException
 
 import ar.com.p39.localshare.R
-import ar.com.p39.localshare.receiver.ui.BarcodeSharerTracker
-import ar.com.p39.localshare.receiver.ui.ScanAreaGraphic
-import ar.com.p39.localshare.receiver.ui.BarcodeGraphic
-import ar.com.p39.localshare.receiver.ui.BarcodeTrackerFactory
-import ar.com.p39.localshare.receiver.ui.CameraSourcePreview
-import ar.com.p39.localshare.receiver.ui.GraphicOverlay
+import ar.com.p39.localshare.receiver.ui.*
+import ar.com.p39.localshare.sharer.ShareActivity
+import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import butterknife.bindView
+import dagger.Module
+import dagger.Provides
+import dagger.Subcomponent
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
 
 class ScanActivity : AppCompatActivity(), BarcodeSharerTracker.SharerBarcodeDetectedListener {
@@ -45,13 +50,24 @@ class ScanActivity : AppCompatActivity(), BarcodeSharerTracker.SharerBarcodeDete
     val graphicOverlay: GraphicOverlay<BarcodeGraphic> by bindView(R.id.graphicOverlay)
     val areaOverlay: GraphicOverlay<ScanAreaGraphic> by bindView(R.id.areaOverlay)
 
+    val toolbar: Toolbar by bindView(R.id.toolbar)
+
+    @Inject
+    lateinit var viewModifier: ScanViewModifier
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_scan)
 
-        MyApplication.graph.inject(this)
+        MyApplication.graph.plus(ScanActivity.ScanActivityModule()).inject(this)
 
-        areaOverlay.add(ScanAreaGraphic(areaOverlay))
+        setContentView(viewModifier.modify(layoutInflater.inflate(R.layout.activity_scan, null)));
+
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setTitle(R.string.title_activity_scan)
+
+        val color = resources.getColor(R.color.colorPrimaryDark)
+        areaOverlay.add(ScanAreaGraphic(color, areaOverlay))
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
@@ -248,4 +264,18 @@ class ScanActivity : AppCompatActivity(), BarcodeSharerTracker.SharerBarcodeDete
         private val RC_HANDLE_GMS = 9001
         private val RC_HANDLE_CAMERA_PERM = 2
     }
+
+    @Subcomponent(modules = arrayOf(ScanActivityModule::class))
+    interface ScanActivityComponent {
+        fun inject(scanActivity: ScanActivity);
+    }
+
+    @Module
+    class ScanActivityModule() {
+        @Provides
+        fun provideViewModifier(): ScanViewModifier {
+            return ScanViewModifier()
+        }
+    }
+
 }

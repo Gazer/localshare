@@ -4,6 +4,9 @@
     <string name="ok">Ok</string>
     <string name="no_camera_permission">Please give camera permission</string>
     <string name="title_activity_share">Wifi Share</string>
+    <string name="title_activity_scan">Get photos</string>
     <string name="please_scan_the_code">Scan the QR code with another devices to copy content from this device.</string>
     <string name="preview">preview</string>
+    <string name="scan_friend_phone">Scan your\'s friend phone to download the photos</string>
+    <string name="download">Download</string>
 </resources>

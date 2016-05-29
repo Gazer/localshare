@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#88000000"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Scan Settings"
+            android:textColor="#eeeeee"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            style="@style/DeveloperSettingsCategoryTitle"
+            android:text="Build info"
+            tools:ignore="HardcodedText" />
+
+        <View style="@style/DeveloperSettingsCategoryDivider" />
+
+        <LinearLayout style="@style/DeveloperSettingsItemContainer">
+
+            <TextView
+                style="@style/DeveloperSettingsItemTitle"
+                android:text="Git sha"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/developer_settings_git_sha_text_view"
+                style="@style/DeveloperSettingsItemControl"
+                android:textIsSelectable="true"
+                tools:text="86bec6a6595bf7d" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/DeveloperSettingsItemContainer">
+
+            <TextView
+                style="@style/DeveloperSettingsItemTitle"
+                android:text="Build date"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/developer_settings_build_date_text_view"
+                style="@style/DeveloperSettingsItemControl"
+                android:textIsSelectable="true"
+                tools:text="2020-09-22 16:35" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/DeveloperSettingsItemContainer">
+
+            <TextView
+                style="@style/DeveloperSettingsItemTitle"
+                android:text="Build version code"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/developer_settings_build_version_code_text_view"
+                style="@style/DeveloperSettingsItemControl"
+                android:textIsSelectable="true"
+                tools:text="38" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/DeveloperSettingsItemContainer">
+
+            <TextView
+                style="@style/DeveloperSettingsItemTitle"
+                android:text="Build version name"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/developer_settings_build_version_name_text_view"
+                style="@style/DeveloperSettingsItemControl"
+                android:textIsSelectable="true"
+                tools:text="v1.0.1" />
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/DeveloperSettingsCategoryTitle"
+            android:text="QR Mock Server"
+            tools:ignore="HardcodedText" />
+
+        <View style="@style/DeveloperSettingsCategoryDivider" />
+
+        <LinearLayout style="@style/DeveloperSettingsItemContainer">
+
+            <TextView
+                style="@style/DeveloperSettingsItemTitle"
+                android:text="Server URL"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/developer_settings_server_url"
+                style="@style/DeveloperSettingsItemControl"
+                android:inputType="textUri"
+                android:text="http://192.168.0.103:8080/sharer"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <View style="@style/DeveloperSettingsCategoryDivider" />
+
+        <LinearLayout style="@style/DeveloperSettingsItemContainer">
+
+            <TextView
+                style="@style/DeveloperSettingsItemTitle"
+                android:text="Fake SSID"
+                tools:ignore="HardcodedText" />
+
+            <Switch
+                android:id="@+id/developer_settings_device_fake_ssid"
+                style="@style/DeveloperSettingsItemControl"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/DeveloperSettingsItemContainer">
+
+            <TextView
+                style="@style/DeveloperSettingsItemTitle"
+                android:text="Faked SSID"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/developer_settings_device_ssid"
+                style="@style/DeveloperSettingsItemControl"
+                android:inputType="textUri"
+                android:text="YourSSID"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/b_qr_scan"
+            style="@style/DeveloperSettingsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Simular QR Scan"
+            tools:ignore="HardcodedText" />
+
+
+    </LinearLayout>
+
+</ScrollView>

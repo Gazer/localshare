@@ -1,9 +1,11 @@
 package ar.com.p39.localshare.sharer.network
 
+import android.util.Log
 import java.io.IOException
 
 import ar.com.p39.localshare.sharer.models.FileShare
 import fi.iki.elonen.NanoHTTPD
+import java.util.concurrent.Executors
 
 /**
  * Handle HTTP Server stuff
@@ -16,16 +18,18 @@ class ShareServer @Throws(IOException::class)
     constructor(val bssid:String, val ip: String, val files: List<FileShare>) : NanoHTTPD(ip, 8080) {
 
     init {
+        setAsyncRunner(BoundRunner(Executors.newFixedThreadPool(5)));
+        Log.d("SERVER", "Publishing URL : http://$ip:8080/sharer")
         start()
     }
 
     override fun serve(session: NanoHTTPD.IHTTPSession): NanoHTTPD.Response {
-        var path = session.uri
+        val path = session.uri
 
         if ("/sharer".equals(path)) {
             return doSharer(session)
         } else if (path.startsWith("/get")) {
-            var index = path.split("/").last().toInt()
+            val index = path.split("/").last().toInt()
             return doFile(index)
         }
 
@@ -36,22 +40,24 @@ class ShareServer @Throws(IOException::class)
         if (index >= files.size) {
             return do404()
         } else {
-            var file = files[index]
-            return Response(Response.Status.OK, file.contentType, file.stream)
+            val file = files[index]
+            return newChunkedResponse(Response.Status.OK, file.contentType, file.stream)
         }
     }
 
     private fun do404(): Response {
-        return NanoHTTPD.Response("Not Found")
+        return NanoHTTPD.newFixedLengthResponse("Not Found")
     }
 
     fun doSharer(session: NanoHTTPD.IHTTPSession): NanoHTTPD.Response {
         val params = session.parms
         if (params["shareInfo"] != null) {
-            var files = files.map { it.toJson() }.joinToString(",", "[", "]")
+            val files = files.mapIndexed {
+                index, it -> """{"name": "${it.name}", "size": ${it.size}, "contentType": "${it.contentType}", "url": "http://$ip:8080/get/$index"}"""
+            }.joinToString(",", "[", "]")
 
-            var body = "{\"ssid\": \"$bssid\", \"files\": $files}"
-            val r = NanoHTTPD.Response(body)
+            val body = "{\"ssid\": \"$bssid\", \"files\": $files}"
+            val r = NanoHTTPD.newFixedLengthResponse(body)
             r.addHeader("Content-Type", "application/json")
             return r
         } else {
@@ -60,6 +66,6 @@ class ShareServer @Throws(IOException::class)
     }
 
     private fun redirectToGooglePlay(): NanoHTTPD.Response {
-        return NanoHTTPD.Response("Redirect")
+        return NanoHTTPD.newFixedLengthResponse("Redirect")
     }
 }

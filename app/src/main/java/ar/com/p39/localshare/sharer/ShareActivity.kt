@@ -44,19 +44,25 @@ import ar.com.p39.localshare.R
 import ar.com.p39.localshare.sharer.models.FileShare
 import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import ar.com.p39.localshare.sharer.views.ShareView
+import dagger.Module
+import dagger.Provides
+import dagger.Subcomponent
+import javax.inject.Inject
+import javax.inject.Singleton
 
 class ShareActivity : AppCompatActivity(), ShareView {
 
     private var dataView: TextView? = null
     private var qr: QRImageView? = null
 
+    @Inject
     lateinit var presenter: SharePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share)
 
-        MyApplication.graph.inject(this)
+        MyApplication.graph.plus(ShareActivityModule(intent)).inject(this)
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
@@ -73,13 +79,13 @@ class ShareActivity : AppCompatActivity(), ShareView {
         val connManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
 
-        var wifiManager = getSystemService (Context.WIFI_SERVICE) as WifiManager;
-        var info = wifiManager.getConnectionInfo ();
+        val wifiManager = getSystemService (Context.WIFI_SERVICE) as WifiManager;
+        val info = wifiManager.getConnectionInfo ();
 
         presenter.checkWifiStatus(wifi.isConnected, info.bssid)
     }
 
-    protected fun wifiIpAddress(context: Context): String {
+    private fun wifiIpAddress(context: Context): String {
         val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
         var ipAddress = wifiManager.connectionInfo.ipAddress
 
@@ -177,5 +183,18 @@ class ShareActivity : AppCompatActivity(), ShareView {
     override fun onStop() {
         super.onStop()
         presenter.stopSharing()
+    }
+
+    @Subcomponent(modules = arrayOf(ShareActivityModule::class))
+    interface ShareActivityComponent {
+        fun inject(shareActivity: ShareActivity);
+    }
+
+    @Module
+    class ShareActivityModule(private var intent: Intent) {
+        @Provides
+        fun provideSharePresenter(): SharePresenter {
+            return SharePresenter(intent)
+        }
     }
 }

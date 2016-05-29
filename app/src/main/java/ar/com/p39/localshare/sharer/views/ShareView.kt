@@ -6,5 +6,5 @@ interface ShareView {
     fun showWifiError()
 
     fun showUriData(uri: Uri)
-    fun showUriData(uri: List<Uri>)
+    fun showUriData(uris: List<Uri>)
 }

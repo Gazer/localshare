@@ -6,4 +6,8 @@
     <string name="ok">Ok</string>
     <string name="please_scan_the_code">Por favor escaneá el código con el teléfono de tu amigo</string>
     <string name="title_activity_share">Compartir por Wifi</string>
+    <string name="preview">Vista previa</string>
+    <string name="title_activity_scan">Obtener fotos</string>
+    <string name="scan_friend_phone">Escaneá el teléfono de tu amigo para bajar las fotos.</string>
+    <string name="download">Descargar</string>
 </resources>

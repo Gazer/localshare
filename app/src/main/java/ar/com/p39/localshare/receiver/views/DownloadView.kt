@@ -11,4 +11,10 @@ interface DownloadView {
     fun showFiles(files: List<DownloadFile>)
 
     fun showError(s: String)
+
+    fun disableUi()
+
+    fun downloadNextFile()
+
+    fun downloadCompleted(file: DownloadFile)
 }

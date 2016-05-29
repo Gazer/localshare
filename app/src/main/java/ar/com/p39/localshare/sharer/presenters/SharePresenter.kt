@@ -16,7 +16,7 @@ import ar.com.p39.localshare.sharer.views.ShareView
 class SharePresenter(val intent: Intent) : Presenter<ShareView>() {
     var bssid: String? = null
 
-    fun checkWifiStatus(connected: Boolean, bssid: String) {
+    fun checkWifiStatus(connected: Boolean, bssid: String?) {
         this.bssid = bssid
         if (connected) {
             prepareData()
