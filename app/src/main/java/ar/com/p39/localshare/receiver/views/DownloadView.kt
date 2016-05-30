@@ -14,7 +14,9 @@ interface DownloadView {
 
     fun disableUi()
 
-    fun downloadNextFile()
+    fun downloadStart()
 
-    fun downloadCompleted(file: DownloadFile)
+    fun downloadCompleted(data: ByteArray)
+
+    fun downloadFinished()
 }

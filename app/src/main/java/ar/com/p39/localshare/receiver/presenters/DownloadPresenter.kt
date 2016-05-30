@@ -20,8 +20,11 @@ import java.io.BufferedInputStream
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.concurrent.TimeUnit
 
 class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>() {
+    var files: DownloadList? = null
+
     fun inspectUrl(bssid: String, url: String) {
         val uri = Uri.parse(url)
         val baseUrl = "http://${uri.host}:${uri.port}/"
@@ -45,6 +48,7 @@ class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>(
                             if (bssid != list.ssid) {
                                 view()?.connectoToWifi(list.ssid)
                             } else {
+                                files = list
                                 view()?.showFiles(list.files)
                             }
                         }, {
@@ -58,7 +62,30 @@ class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>(
     fun startDownload() {
         view()?.disableUi()
 
-        view()?.downloadNextFile()
+        if (files != null) {
+            downloadNextFile()
+        }
+    }
+
+    private fun downloadNextFile() {
+        val currentFile = nextFile((files as DownloadList).files)
+        if (currentFile != null) {
+            currentFile.status = 1
+            view()?.downloadStart()
+            download(currentFile)
+        } else {
+            view()?.downloadFinished()
+        }
+    }
+
+    private fun nextFile(files: List<DownloadFile>): DownloadFile? {
+        for (file in files) {
+            if (file.status == 0) {
+                return file
+            }
+        }
+
+        return null
     }
 
     fun download(file: DownloadFile) {
@@ -74,16 +101,19 @@ class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>(
             subscriber.onNext(bytes)
             subscriber.onCompleted()
         }).subscribeOn(Schedulers.io())
+                .delay(3, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
                             data: ByteArray ->
-                                view()?.downloadCompleted(file)
+                            file.status = 2
+                            view()?.downloadCompleted(data)
+                            downloadNextFile()
                         },
                         {
                             error ->
-                                Log.e("Download", "Connect failed to ${file.url} : $error")
-                                view()?.showError("Connect failed to ${file.url}")
+                            Log.e("Download", "Connect failed to ${file.url} : $error")
+                            view()?.showError("Connect failed to ${file.url}")
                         }
                 )
     }
