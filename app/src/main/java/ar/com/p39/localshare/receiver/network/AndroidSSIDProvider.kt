@@ -6,7 +6,7 @@ import android.net.wifi.WifiManager
 /**
  * Created by gazer on 5/29/16.
  */
-class AndroidSSIDProvider(val context: Context): WifiSSIDPRovider {
+class AndroidSSIDProvider(val context: Context): WifiSSIDProvider {
     override fun getBSSID():String {
         val wifiManager = context.getSystemService (Context.WIFI_SERVICE) as WifiManager;
         val info = wifiManager.connectionInfo;

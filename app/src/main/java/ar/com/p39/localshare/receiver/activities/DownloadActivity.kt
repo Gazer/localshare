@@ -19,7 +19,7 @@ import ar.com.p39.localshare.R
 import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
 import ar.com.p39.localshare.receiver.adapters.DownloadFileAdapter
 import ar.com.p39.localshare.receiver.models.DownloadFile
-import ar.com.p39.localshare.receiver.network.WifiSSIDPRovider
+import ar.com.p39.localshare.receiver.network.WifiSSIDProvider
 import ar.com.p39.localshare.receiver.views.DownloadView
 import butterknife.bindView
 import com.squareup.picasso.Picasso
@@ -36,7 +36,7 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
     lateinit var presenter: DownloadPresenter
 
     @Inject
-    lateinit var bssidProvider: WifiSSIDPRovider
+    lateinit var bssidProvider: WifiSSIDProvider
 
     @Inject
     lateinit var picasso: Picasso

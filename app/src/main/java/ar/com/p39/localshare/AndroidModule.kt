@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.wifi.WifiManager
 import ar.com.p39.localshare.receiver.network.AndroidSSIDProvider
 import ar.com.p39.localshare.receiver.network.FakeSSIDProvider
-import ar.com.p39.localshare.receiver.network.WifiSSIDPRovider
+import ar.com.p39.localshare.receiver.network.WifiSSIDProvider
 import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
 import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import com.squareup.picasso.Picasso
@@ -63,7 +63,7 @@ class AndroidModule(private val application: Application) {
     }
 
     @Provides
-    fun provideWifiSSIDPRovider(wifiManager: WifiManager, settings: Settings): WifiSSIDPRovider {
+    fun provideWifiSSIDPRovider(wifiManager: WifiManager, settings: Settings): WifiSSIDProvider {
         if (settings.fakeSSID) {
             return FakeSSIDProvider(settings);
         }
