@@ -41,6 +41,7 @@ class ShareServer @Throws(IOException::class)
             return do404()
         } else {
             val file = files[index]
+            file.stream.reset()
             return newChunkedResponse(Response.Status.OK, file.contentType, file.stream)
         }
     }
