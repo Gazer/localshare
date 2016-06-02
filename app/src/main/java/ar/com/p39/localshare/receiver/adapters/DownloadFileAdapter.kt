@@ -31,7 +31,7 @@ class DownloadFileAdapter(val picasso: Picasso, var files:List<DownloadFile>) : 
         val item = files[position]
         if (holder != null) {
             holder.fileName.text = item.name
-            picasso.load(item.url).resize(200, 200).error(R.drawable.ic_error).into(holder.imageView)
+            picasso.load(item.url).resize(200, 200).centerInside().error(R.drawable.ic_error).into(holder.imageView)
             if (item.status == 1) {
                 holder.statusImage.setImageResource(R.drawable.ic_downloading)
             } else if (item.status == 2) {

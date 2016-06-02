@@ -26,4 +26,6 @@ data class DownloadFile(
     init {
         status = 0
     }
+
+    var data: ByteArray? = null
 }

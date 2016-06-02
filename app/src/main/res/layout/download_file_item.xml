@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="4dp">
+    android:padding="8dp">
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:contentDescription="@string/preview"
         android:scaleType="centerCrop"
         tools:src="@drawable/ic_cast_light" />
@@ -20,7 +20,9 @@
         android:layout_toEndOf="@+id/image"
         android:layout_toStartOf="@+id/status"
         android:padding="8dp"
-        tools:text="Demo" />
+        android:ellipsize="middle"
+        android:singleLine="true"
+        tools:text="Demo asd asd asd a dsa sda sd asd  asd asd asd as d" />
 
     <ImageView
         android:id="@+id/status"

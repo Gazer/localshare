@@ -42,6 +42,7 @@ get '/sharer' do
 end
 
 get '/get/:id' do
+  sleep 2 + rand * 5
   id = params[:id].to_i
   file = files[id]
   send_file open(filenames[id]), type: file[:contentType], disposition: 'inline'
