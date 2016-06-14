@@ -13,7 +13,7 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize" />
 
-    <ar.com.p39.localshare.sharer.QRImageView
+    <ar.com.p39.localshare.common.ui.QRImageView
         android:id="@+id/qr"
         android:layout_width="match_parent"
         android:layout_height="0dp"

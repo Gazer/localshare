@@ -1,4 +1,4 @@
-package ar.com.p39.localshare.sharer
+package ar.com.p39.localshare.common.ui
 
 import android.content.Context
 import android.graphics.Bitmap

@@ -41,9 +41,13 @@ import java.util.ArrayList
 import java.util.EnumMap
 
 import ar.com.p39.localshare.R
+import ar.com.p39.localshare.common.IpAddress
+import ar.com.p39.localshare.common.ui.QRImageView
+import ar.com.p39.localshare.common.network.WifiSSIDProvider
 import ar.com.p39.localshare.sharer.models.FileShare
 import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import ar.com.p39.localshare.sharer.views.ShareView
+import butterknife.bindView
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
@@ -51,12 +55,19 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 class ShareActivity : AppCompatActivity(), ShareView {
-
-    private var dataView: TextView? = null
-    private var qr: QRImageView? = null
+    val dataView: TextView by bindView(R.id.files)
+    val qr: QRImageView by bindView(R.id.qr)
+    val help: TextView by bindView(R.id.help)
 
     @Inject
     lateinit var presenter: SharePresenter
+
+    @Inject
+    lateinit var bssidProvider: WifiSSIDProvider
+
+    @Inject
+    lateinit var wifiManager: WifiManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,67 +78,13 @@ class ShareActivity : AppCompatActivity(), ShareView {
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
 
-        dataView = findViewById(R.id.files) as TextView?
-        qr = findViewById(R.id.qr) as QRImageView?
-
         presenter.bindView(this)
-
-        readWifiStatus()
+        presenter.checkWifiStatus(bssidProvider.isConnected(), bssidProvider.getBSSID())
     }
 
-    private fun readWifiStatus() {
-        val connManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val wifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-
-        val wifiManager = getSystemService (Context.WIFI_SERVICE) as WifiManager;
-        val info = wifiManager.getConnectionInfo ();
-
-        presenter.checkWifiStatus(wifi.isConnected, info.bssid)
-    }
-
-    private fun wifiIpAddress(context: Context): String {
-        val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-        var ipAddress = wifiManager.connectionInfo.ipAddress
-
-        // Convert little-endian to big-endianif needed
-        if (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN) {
-            ipAddress = Integer.reverseBytes(ipAddress)
-        }
-
-        val ipByteArray = BigInteger.valueOf(ipAddress.toLong()).toByteArray()
-
-        val ipAddressString: String?
-        try {
-            ipAddressString = InetAddress.getByAddress(ipByteArray).hostAddress
-        } catch (ex: UnknownHostException) {
-            Log.e("WIFIIP", "Unable to get host address.")
-            ipAddressString = null
-        }
-
-        return ipAddressString ?: ""
-    }
 
     override fun showUriData(uri: Uri) {
-        val files = ArrayList<FileShare>()
-
-        val returnCursor = contentResolver.query(uri, null, null, null, null)
-        val nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        val sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE)
-        returnCursor.moveToFirst()
-
-        try {
-            val share = FileShare(
-                returnCursor.getString(nameIndex),
-                returnCursor.getLong(sizeIndex),
-                contentResolver.getType(uri),
-                contentResolver.openInputStream(uri)
-            )
-            files.add(share)
-            returnCursor.close()
-
-            shareFiles(files)
-        } catch (e: IOException) {
-        }
+        showUriData(listOf(uri))
     }
 
     override fun showUriData(uris: List<Uri>) {
@@ -143,17 +100,16 @@ class ShareActivity : AppCompatActivity(), ShareView {
 
             try {
                 val share = FileShare(
-                    returnCursor.getString(nameIndex),
-                    returnCursor.getLong(sizeIndex),
-                    contentResolver.getType(uri),
-                    contentResolver.openInputStream(uri)
+                        returnCursor.getString(nameIndex),
+                        returnCursor.getLong(sizeIndex),
+                        contentResolver.getType(uri),
+                        contentResolver.openInputStream(uri)
                 )
                 files.add(share)
-                returnCursor.close()
-
             } catch (e: IOException) {
+            } finally {
+                returnCursor.close()
             }
-
         }
         shareFiles(files)
     }
@@ -161,23 +117,28 @@ class ShareActivity : AppCompatActivity(), ShareView {
     fun Double.format(digits: Int) = java.lang.String.format("%.${digits}f", this)
 
     private fun shareFiles(files: List<FileShare>) {
-        val ip = wifiIpAddress(this)
+        val ip = wifiManager.IpAddress()
 
-        presenter.startSharing(ip, files)
+        if (ip != null) {
+            presenter.startSharing(ip, files)
 
-        qr!!.setData("http://$ip:8080/sharer")
+            qr.setData("http://$ip:8080/sharer")
 
-        val totalSize :Double = files.map { it.size }.sum() / (1024*1024.0)
+            val totalSize: Double = files.map { it.size }.sum() / (1024 * 1024.0)
 
-        dataView!!.text =
-                "Files : ${files.size}\n" +
-                "Size : ${totalSize.format(2)} MB"
+            dataView.text =
+                    "Url : ${"http://$ip:8080/sharer"}" +
+                    "Files : ${files.size}\n" +
+                    "Size : ${totalSize.format(2)} MB"
+        } else {
+            showWifiError()
+        }
     }
 
     override fun showWifiError() {
-        if (dataView != null) {
-            Snackbar.make(dataView as TextView, "Please connecto to wifi", Snackbar.LENGTH_INDEFINITE).show()
-        }
+        Snackbar.make(dataView, "Please connecto to wifi", Snackbar.LENGTH_INDEFINITE).show()
+        help.visibility = View.GONE
+        qr.visibility = View.GONE
     }
 
     override fun onStop() {

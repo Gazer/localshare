@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.WifiManager
-import ar.com.p39.localshare.receiver.network.AndroidSSIDProvider
-import ar.com.p39.localshare.receiver.network.FakeSSIDProvider
-import ar.com.p39.localshare.receiver.network.WifiSSIDProvider
+import ar.com.p39.localshare.common.network.AndroidSSIDProvider
+import ar.com.p39.localshare.common.network.FakeSSIDProvider
+import ar.com.p39.localshare.common.network.WifiSSIDProvider
 import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
 import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import com.squareup.picasso.Picasso

@@ -12,19 +12,21 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import ar.com.p39.localshare.MyApplication
 import ar.com.p39.localshare.R
 import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
 import ar.com.p39.localshare.receiver.adapters.DownloadFileAdapter
 import ar.com.p39.localshare.receiver.models.DownloadFile
-import ar.com.p39.localshare.receiver.network.WifiSSIDProvider
+import ar.com.p39.localshare.common.network.WifiSSIDProvider
 import ar.com.p39.localshare.receiver.views.DownloadView
 import butterknife.bindView
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Allow the user to see which files are available to download
@@ -41,8 +43,11 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
     @Inject
     lateinit var picasso: Picasso
 
+    val toolbar: Toolbar by bindView(R.id.toolbar)
     val list: RecyclerView by bindView(R.id.list)
     val button: Button by bindView(R.id.download)
+    val finish: Button by bindView(R.id.finish)
+    val loading: ProgressBar by bindView(R.id.loading)
 
     private var adapter: DownloadFileAdapter? = null
 
@@ -52,6 +57,10 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
 
         MyApplication.graph.inject(this)
 
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.title = getString(R.string.title_activity_download)
+
         val url = intent.extras.getString("url")
 
         presenter.bindView(this)
@@ -59,6 +68,7 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
 
         list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         button.setOnClickListener { checkWritePermission() }
+        finish.setOnClickListener { finish() }
     }
 
     private fun checkWritePermission() {
@@ -104,6 +114,10 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
     override fun showFiles(files: List<DownloadFile>) {
         adapter = DownloadFileAdapter(picasso, files)
         list.adapter = adapter
+
+        loading.visibility = View.GONE
+        list.visibility = View.VISIBLE
+        button.visibility = View.VISIBLE
     }
 
     override fun showError(s: String) {
@@ -131,6 +145,8 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
 
     override fun downloadFinished() {
         Snackbar.make(list, "All files was downloaded!", Snackbar.LENGTH_SHORT).show()
+        finish.visibility = View.VISIBLE
+        button.visibility = View.GONE
     }
 
     companion object {
