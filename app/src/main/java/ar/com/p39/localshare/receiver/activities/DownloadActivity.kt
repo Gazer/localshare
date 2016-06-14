@@ -3,7 +3,6 @@ package ar.com.p39.localshare.receiver.activities
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.design.widget.Snackbar
@@ -19,10 +18,10 @@ import android.widget.Button
 import android.widget.ProgressBar
 import ar.com.p39.localshare.MyApplication
 import ar.com.p39.localshare.R
-import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
+import ar.com.p39.localshare.common.network.WifiSSIDProvider
 import ar.com.p39.localshare.receiver.adapters.DownloadFileAdapter
 import ar.com.p39.localshare.receiver.models.DownloadFile
-import ar.com.p39.localshare.common.network.WifiSSIDProvider
+import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
 import ar.com.p39.localshare.receiver.views.DownloadView
 import butterknife.bindView
 import com.squareup.picasso.Picasso

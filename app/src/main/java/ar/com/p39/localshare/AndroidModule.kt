@@ -2,18 +2,12 @@ package ar.com.p39.localshare
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.net.wifi.WifiManager
-import ar.com.p39.localshare.common.network.AndroidSSIDProvider
-import ar.com.p39.localshare.common.network.FakeSSIDProvider
-import ar.com.p39.localshare.common.network.WifiSSIDProvider
 import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
-import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -60,13 +54,5 @@ class AndroidModule(private val application: Application) {
     @Singleton
     fun providesOkHTTPClient(): OkHttpClient {
         return OkHttpClient()
-    }
-
-    @Provides
-    fun provideWifiSSIDPRovider(wifiManager: WifiManager, settings: Settings): WifiSSIDProvider {
-        if (settings.fakeSSID) {
-            return FakeSSIDProvider(settings);
-        }
-        return AndroidSSIDProvider(application)
     }
 }

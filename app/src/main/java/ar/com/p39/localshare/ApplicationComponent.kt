@@ -1,5 +1,6 @@
 package ar.com.p39.localshare
 
+import ar.com.p39.localshare.common.network.NetworkModule
 import ar.com.p39.localshare.receiver.activities.DownloadActivity
 import ar.com.p39.localshare.receiver.activities.ScanActivity
 import ar.com.p39.localshare.receiver.fragments.ScanDeveloperSettingsFragment
@@ -13,7 +14,7 @@ import javax.inject.Singleton
  * Created by gazer on 5/16/16.
  */
 @Singleton
-@Component(modules = arrayOf(AndroidModule::class))
+@Component(modules = arrayOf(AndroidModule::class, NetworkModule::class))
 interface ApplicationComponent {
     fun inject(myApplication: MyApplication)
     fun inject(downloadActivity: DownloadActivity)
