@@ -13,14 +13,10 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
 import rx.Observable
-import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.BufferedInputStream
-import java.io.FileOutputStream
 import java.io.InputStream
-import java.io.OutputStream
-import java.util.concurrent.TimeUnit
 
 class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>() {
     lateinit var downloadFiles: DownloadList
@@ -107,7 +103,7 @@ class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>(
                 subscriber.onCompleted()
                 stream.close()
                 input.close()
-            }).subscribeOn(Schedulers.io()).delay(3, TimeUnit.SECONDS)
+            }).subscribeOn(Schedulers.io())
         }
     }
 }

@@ -1,49 +1,20 @@
 package ar.com.p39.localshare.sharer
 
-import android.content.Context
 import android.content.Intent
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.net.Uri
-import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Bundle
-import android.os.Parcelable
 import android.provider.OpenableColumns
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.text.format.Formatter
-import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import ar.com.p39.localshare.MyApplication
-
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.EncodeHintType
-import com.google.zxing.MultiFormatWriter
-import com.google.zxing.WriterException
-import com.google.zxing.common.BitMatrix
-
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.io.InputStream
-import java.math.BigInteger
-import java.net.InetAddress
-import java.net.UnknownHostException
-import java.nio.ByteOrder
-import java.util.ArrayList
-import java.util.EnumMap
-
 import ar.com.p39.localshare.R
 import ar.com.p39.localshare.common.IpAddress
-import ar.com.p39.localshare.common.ui.QRImageView
 import ar.com.p39.localshare.common.network.WifiSSIDProvider
+import ar.com.p39.localshare.common.ui.QRImageView
 import ar.com.p39.localshare.sharer.models.FileShare
 import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import ar.com.p39.localshare.sharer.views.ShareView
@@ -51,8 +22,9 @@ import butterknife.bindView
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import java.io.IOException
+import java.util.*
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class ShareActivity : AppCompatActivity(), ShareView {
     val dataView: TextView by bindView(R.id.files)
@@ -68,7 +40,6 @@ class ShareActivity : AppCompatActivity(), ShareView {
     @Inject
     lateinit var wifiManager: WifiManager
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share)
@@ -77,6 +48,8 @@ class ShareActivity : AppCompatActivity(), ShareView {
 
         val toolbar = findViewById(R.id.toolbar) as Toolbar?
         setSupportActionBar(toolbar)
+
+        supportActionBar?.title = getString(R.string.title_activity_share)
 
         presenter.bindView(this)
         presenter.checkWifiStatus(bssidProvider.isConnected(), bssidProvider.getBSSID())
@@ -136,7 +109,7 @@ class ShareActivity : AppCompatActivity(), ShareView {
     }
 
     override fun showWifiError() {
-        Snackbar.make(dataView, "Please connecto to wifi", Snackbar.LENGTH_INDEFINITE).show()
+        Snackbar.make(dataView, R.string.connect_to_wifi    , Snackbar.LENGTH_INDEFINITE).show()
         help.visibility = View.GONE
         qr.visibility = View.GONE
     }

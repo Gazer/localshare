@@ -11,7 +11,7 @@ class NetworkModule(private val application: Application) {
     @Provides
     fun provideWifiSSIDPRovider(wifiManager: WifiManager, settings: Settings): WifiSSIDProvider {
         if (settings.fakeSSID) {
-            return FakeSSIDProvider(settings);
+            return FakeSSIDProvider(settings)
         }
         return AndroidSSIDProvider(application)
     }

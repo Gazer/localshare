@@ -40,5 +40,6 @@
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_weight="1"
+        android:visibility="gone"
         tools:text="http://server:port/sharer" />
 </LinearLayout>

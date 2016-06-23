@@ -1,6 +1,7 @@
 package ar.com.p39.localshare
 
 import android.app.Application
+import ar.com.p39.localshare.common.network.NetworkModule
 
 /**
  * Base application object
@@ -16,8 +17,10 @@ class MyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        graph = DaggerApplicationComponent.builder().androidModule(AndroidModule(this)).build()
+        graph = DaggerApplicationComponent.builder()
+                .androidModule(AndroidModule(this))
+                .networkModule(NetworkModule(this))
+                .build()
         graph.inject(this)
-
     }
 }
