@@ -10,7 +10,7 @@
         android:layout_height="64dp"
         android:contentDescription="@string/preview"
         android:scaleType="centerCrop"
-        tools:src="@drawable/ic_cast_light" />
+        tools:src="@drawable/ic_error" />
 
     <TextView
         android:id="@+id/name"
@@ -19,6 +19,8 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/image"
         android:layout_toStartOf="@+id/status"
+        android:layout_toRightOf="@+id/image"
+        android:layout_toLeftOf="@+id/status"
         android:padding="8dp"
         android:ellipsize="middle"
         android:singleLine="true"
@@ -29,9 +31,10 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/preview"
         android:scaleType="centerCrop"
-        tools:src="@drawable/ic_cast_light" />
+        tools:src="@drawable/ic_downloaded" />
 
 </RelativeLayout>

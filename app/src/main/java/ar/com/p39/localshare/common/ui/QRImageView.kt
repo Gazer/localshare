@@ -1,5 +1,6 @@
 package ar.com.p39.localshare.common.ui
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -40,6 +41,7 @@ class QRImageView : View {
         setup()
     }
 
+    @TargetApi(21)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
         setup()
     }
