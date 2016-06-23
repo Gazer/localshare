@@ -19,6 +19,8 @@ import ar.com.p39.localshare.sharer.models.FileShare
 import ar.com.p39.localshare.sharer.presenters.SharePresenter
 import ar.com.p39.localshare.sharer.views.ShareView
 import butterknife.bindView
+import com.crashlytics.android.answers.Answers
+import com.crashlytics.android.answers.CustomEvent
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
@@ -103,9 +105,15 @@ class ShareActivity : AppCompatActivity(), ShareView {
                     "Url : ${"http://$ip:8080/sharer"}" +
                     "Files : ${files.size}\n" +
                     "Size : ${totalSize.format(2)} MB"
+
+            trackFiles(files.size)
         } else {
             showWifiError()
         }
+    }
+
+    private fun trackFiles(size: Int) {
+        Answers.getInstance().logCustom(CustomEvent("Files Shared").putCustomAttribute("Count", size));
     }
 
     override fun showWifiError() {

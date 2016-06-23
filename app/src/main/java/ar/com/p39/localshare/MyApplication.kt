@@ -2,6 +2,8 @@ package ar.com.p39.localshare
 
 import android.app.Application
 import ar.com.p39.localshare.common.network.NetworkModule
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 
 /**
  * Base application object
@@ -22,5 +24,9 @@ class MyApplication : Application() {
                 .networkModule(NetworkModule(this))
                 .build()
         graph.inject(this)
+
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, Crashlytics());
+        }
     }
 }

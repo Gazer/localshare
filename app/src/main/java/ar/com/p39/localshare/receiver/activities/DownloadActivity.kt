@@ -24,6 +24,8 @@ import ar.com.p39.localshare.receiver.models.DownloadFile
 import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
 import ar.com.p39.localshare.receiver.views.DownloadView
 import butterknife.bindView
+import com.crashlytics.android.answers.Answers
+import com.crashlytics.android.answers.CustomEvent
 import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
@@ -146,6 +148,8 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
         Snackbar.make(list, "All files was downloaded!", Snackbar.LENGTH_SHORT).show()
         finish.visibility = View.VISIBLE
         button.visibility = View.GONE
+
+        Answers.getInstance().logCustom(CustomEvent("Files Downloaded").putCustomAttribute("Count", adapter?.itemCount));
     }
 
     companion object {
