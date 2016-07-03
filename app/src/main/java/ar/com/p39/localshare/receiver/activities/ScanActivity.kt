@@ -220,7 +220,7 @@ class ScanActivity : AppCompatActivity(), BarcodeSharerTracker.SharerBarcodeDete
         val listener = DialogInterface.OnClickListener { dialog, id -> finish() }
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Multitracker sample").setMessage(R.string.no_camera_permission).setPositiveButton(R.string.ok, listener).show()
+        builder.setTitle(R.string.app_name).setMessage(R.string.no_camera_permission).setPositiveButton(R.string.ok, listener).show()
     }
 
     /**

@@ -29,7 +29,7 @@ android {
         applicationId "ar.com.p39.localshare"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
+        versionCode 5
         versionName "1.0"
         multiDexEnabled false
     }
@@ -57,6 +57,13 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+    }
+    lintOptions {
+        warningsAsErrors true
+        abortOnError true // Fail early.
+
+        disable 'GoogleAppIndexingWarning' // App does not have deep linking.
+        disable 'InvalidPackage' // Okio references java.nio that does not presented in Android SDK.
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'

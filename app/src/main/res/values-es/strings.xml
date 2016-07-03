@@ -4,13 +4,14 @@
     <string name="low_storage_error">Almacenamiento bajo</string>
     <string name="no_camera_permission">Por favor de permisos para usar la cámara</string>
     <string name="ok">Ok</string>
-    <string name="please_scan_the_code">Por favor escaneá el código con el teléfono de tu amigo</string>
+    <string name="please_scan_the_code">Por favor escaneá el código usando \'LocalShare\' en el teléfono de tu amigo para copiar el contenido.</string>
     <string name="title_activity_share">Compartir por Wifi</string>
     <string name="preview">Vista previa</string>
     <string name="title_activity_scan">Obtener fotos</string>
-    <string name="scan_friend_phone">Escaneá el teléfono de tu amigo para bajar las fotos.</string>
+    <string name="scan_friend_phone">Pide a un amigo que te comparta imágenes desde su teléfono usando \'Compartir por Wifi\' y escaneá el código QR con el tuyo.</string>
     <string name="download">Descargar</string>
     <string name="title_activity_download">Descargar archivos</string>
     <string name="finish">Terminar</string>
     <string name="connect_to_wifi">Por favor conectese al WiFi</string>
+    <string name="help_network">Asegurate que tu amigo se conecte a la red Wifi \'%s\'</string>
 </resources>

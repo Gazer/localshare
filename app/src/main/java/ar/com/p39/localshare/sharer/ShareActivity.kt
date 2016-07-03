@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.TextView
+import ar.com.p39.localshare.BuildConfig
 import ar.com.p39.localshare.MyApplication
 import ar.com.p39.localshare.R
 import ar.com.p39.localshare.common.IpAddress
@@ -29,9 +30,9 @@ import java.util.*
 import javax.inject.Inject
 
 class ShareActivity : AppCompatActivity(), ShareView {
-    val dataView: TextView by bindView(R.id.files)
     val qr: QRImageView by bindView(R.id.qr)
     val help: TextView by bindView(R.id.help)
+    val helpWifi: TextView by bindView(R.id.help_wifi)
 
     @Inject
     lateinit var presenter: SharePresenter
@@ -55,6 +56,8 @@ class ShareActivity : AppCompatActivity(), ShareView {
 
         presenter.bindView(this)
         presenter.checkWifiStatus(bssidProvider.isConnected(), bssidProvider.getBSSID())
+
+        helpWifi.text = getString(R.string.help_network, bssidProvider.getBSSID())
     }
 
 
@@ -101,11 +104,6 @@ class ShareActivity : AppCompatActivity(), ShareView {
 
             val totalSize: Double = files.map { it.size }.sum() / (1024 * 1024.0)
 
-            dataView.text =
-                    "Url : ${"http://$ip:8080/sharer"}" +
-                    "Files : ${files.size}\n" +
-                    "Size : ${totalSize.format(2)} MB"
-
             trackFiles(files.size)
         } else {
             showWifiError()
@@ -113,11 +111,14 @@ class ShareActivity : AppCompatActivity(), ShareView {
     }
 
     private fun trackFiles(size: Int) {
-        Answers.getInstance().logCustom(CustomEvent("Files Shared").putCustomAttribute("Count", size));
+        // TODO : DI!
+        if (!BuildConfig.DEBUG) {
+            Answers.getInstance().logCustom(CustomEvent("Files Shared").putCustomAttribute("Count", size));
+        }
     }
 
     override fun showWifiError() {
-        Snackbar.make(dataView, R.string.connect_to_wifi    , Snackbar.LENGTH_INDEFINITE).show()
+        Snackbar.make(help, R.string.connect_to_wifi    , Snackbar.LENGTH_INDEFINITE).show()
         help.visibility = View.GONE
         qr.visibility = View.GONE
     }

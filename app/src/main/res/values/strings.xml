@@ -6,10 +6,11 @@
     <string name="title_activity_share">Wifi Share</string>
     <string name="title_activity_scan">Get photos</string>
     <string name="title_activity_download">Download Files</string>
-    <string name="please_scan_the_code">Scan the QR code with another device to copy this content.</string>
+    <string name="please_scan_the_code">Scan the QR code with \'LocalShare\' on your friend\'s device to copy this content.</string>
     <string name="preview">preview</string>
-    <string name="scan_friend_phone">Scan your\'s friend phone to download the photos</string>
+    <string name="scan_friend_phone">Ask a friend to share some images from their phone using \'Wifi Share\' and scan the QR code with your phone.</string>
     <string name="download">Download</string>
     <string name="finish">Finish</string>
     <string name="connect_to_wifi">Please connect to Wifi</string>
+    <string name="help_network">Be sure that your friend is connected to the Wifi network \'%s\'</string>
 </resources>
