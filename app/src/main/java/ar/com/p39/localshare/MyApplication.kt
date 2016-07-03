@@ -2,6 +2,7 @@ package ar.com.p39.localshare
 
 import android.app.Application
 import ar.com.p39.localshare.common.network.NetworkModule
+import ar.com.p39.localshare.receiver.fragments.DeveloperSettingsModule
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
@@ -26,7 +27,7 @@ class MyApplication : Application() {
         graph.inject(this)
 
         if (!BuildConfig.DEBUG) {
-            Fabric.with(this, Crashlytics());
+            Fabric.with(this, Crashlytics())
         }
     }
 }

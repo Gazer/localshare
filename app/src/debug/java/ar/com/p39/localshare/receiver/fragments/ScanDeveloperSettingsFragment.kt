@@ -36,11 +36,11 @@ class ScanDeveloperSettingsFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
-        MyApplication.graph.inject(this);
+        MyApplication.graph.plusDeveloperSettingsComponent().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_scan_developer_settings, container, false);
+        return inflater?.inflate(R.layout.fragment_scan_developer_settings, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
