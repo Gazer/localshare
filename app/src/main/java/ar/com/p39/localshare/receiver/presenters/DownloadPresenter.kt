@@ -31,6 +31,7 @@ class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>(
                 .addConverterFactory(JacksonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(baseUrl)
+                .client(httpClient)
                 .build()
 
         val client = retrofit.create(SharerClient::class.java)

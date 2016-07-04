@@ -27,6 +27,7 @@ class AndroidSSIDProvider(val context: Context): WifiSSIDProvider {
     }
 
     override fun getBSSID():String {
-        return info?.ssid ?: ""
+        val tmp = info?.ssid ?: ""
+        return tmp.replace("\"", "")
     }
 }

@@ -9,5 +9,5 @@ import rx.Observable
  */
 interface SharerClient {
     @GET("/sharer?shareInfo=1")
-    fun getShareInfo() : Observable<DownloadList>;
+    fun getShareInfo() : Observable<DownloadList>
 }
