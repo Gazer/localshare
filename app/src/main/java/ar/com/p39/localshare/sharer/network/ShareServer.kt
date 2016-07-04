@@ -1,5 +1,6 @@
 package ar.com.p39.localshare.sharer.network
 
+import android.content.ContentResolver
 import android.util.Log
 import java.io.IOException
 
@@ -15,7 +16,7 @@ import java.util.concurrent.Executors
  * Created by gazer on 3/31/16.
  */
 class ShareServer @Throws(IOException::class)
-    constructor(val bssid:String, val ip: String, val files: List<FileShare>) : NanoHTTPD(ip, 8080) {
+    constructor(val contentResolver: ContentResolver, val bssid:String, val ip: String, val files: List<FileShare>) : NanoHTTPD(ip, 8080) {
 
     init {
         setAsyncRunner(BoundRunner(Executors.newFixedThreadPool(5)));
@@ -41,8 +42,8 @@ class ShareServer @Throws(IOException::class)
             return do404()
         } else {
             val file = files[index]
-            file.stream.reset()
-            return newChunkedResponse(Response.Status.OK, file.contentType, file.stream)
+            val stream = contentResolver.openInputStream(file.uri)
+            return newChunkedResponse(Response.Status.OK, file.contentType, stream)
         }
     }
 

@@ -1,5 +1,6 @@
 package ar.com.p39.localshare.sharer.presenters
 
+import android.content.ContentResolver
 import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
@@ -27,9 +28,10 @@ class SharePresenter(val intent: Intent) : Presenter<ShareView>() {
 
     private var httpServer: ShareServer? = null
 
-    fun startSharing(ip: String, files: List<FileShare>) {
+    // TODO : A better way of using the contentResolver here?
+    fun startSharing(contentResolver: ContentResolver, ip: String, files: List<FileShare>) {
         stopSharing()
-        httpServer = ShareServer(bssid!!, ip, files)
+        httpServer = ShareServer(contentResolver, bssid!!, ip, files)
     }
 
     fun stopSharing() {

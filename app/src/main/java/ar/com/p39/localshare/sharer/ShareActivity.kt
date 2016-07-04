@@ -81,7 +81,7 @@ class ShareActivity : AppCompatActivity(), ShareView {
                         returnCursor.getString(nameIndex),
                         returnCursor.getLong(sizeIndex),
                         contentResolver.getType(uri),
-                        contentResolver.openInputStream(uri)
+                        uri
                 )
                 files.add(share)
             } catch (e: IOException) {
@@ -92,17 +92,13 @@ class ShareActivity : AppCompatActivity(), ShareView {
         shareFiles(files)
     }
 
-    fun Double.format(digits: Int) = java.lang.String.format("%.${digits}f", this)
-
     private fun shareFiles(files: List<FileShare>) {
         val ip = wifiManager.IpAddress()
 
         if (ip != null) {
-            presenter.startSharing(ip, files)
+            presenter.startSharing(contentResolver, ip, files)
 
             qr.setData("http://$ip:8080/sharer")
-
-            val totalSize: Double = files.map { it.size }.sum() / (1024 * 1024.0)
 
             trackFiles(files.size)
         } else {
