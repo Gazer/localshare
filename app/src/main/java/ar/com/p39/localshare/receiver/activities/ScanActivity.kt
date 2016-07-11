@@ -114,9 +114,11 @@ class ScanActivity : AppCompatActivity(), BarcodeSharerTracker.SharerBarcodeDete
         // Creates and starts the camera.  Note that this uses a higher resolution in comparison
         // to other detection examples to enable the barcode detector to detect small barcodes
         // at long distances.
-        var builder: CameraSource.Builder = CameraSource.Builder(applicationContext, barcodeDetector).setFacing(CameraSource.CAMERA_FACING_BACK).setRequestedPreviewSize(480, 640).setRequestedFps(15.0f)
-
-        builder = builder.setAutoFocusEnabled(true)
+        val builder: CameraSource.Builder = CameraSource.Builder(applicationContext, barcodeDetector)
+                .setFacing(CameraSource.CAMERA_FACING_BACK)
+                .setRequestedPreviewSize(480, 640)
+                .setRequestedFps(15.0f)
+                .setAutoFocusEnabled(true)
 
         cameraSource = builder.build()
     }
