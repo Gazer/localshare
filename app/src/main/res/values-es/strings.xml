@@ -14,4 +14,5 @@
     <string name="finish">Terminar</string>
     <string name="connect_to_wifi">Por favor conectese al WiFi</string>
     <string name="help_network">Asegurate que tu amigo se conecte a la red Wifi \'%s\'</string>
+    <string name="invalid_url">La url detectada no es válida</string>
 </resources>

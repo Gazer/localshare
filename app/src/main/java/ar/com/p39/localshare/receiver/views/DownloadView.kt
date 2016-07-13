@@ -19,4 +19,6 @@ interface DownloadView {
     fun downloadCompleted(data: ByteArray)
 
     fun downloadFinished()
+
+    fun showInvalidUrlError()
 }

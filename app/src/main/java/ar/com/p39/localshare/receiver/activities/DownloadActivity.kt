@@ -1,6 +1,7 @@
 package ar.com.p39.localshare.receiver.activities
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.Toast
 import ar.com.p39.localshare.MyApplication
 import ar.com.p39.localshare.R
 import ar.com.p39.localshare.common.network.WifiSSIDProvider
@@ -131,6 +133,12 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
 
     override fun downloadStart() {
         adapter?.notifyDataSetChanged()
+    }
+
+    override fun showInvalidUrlError() {
+        Toast.makeText(this, R.string.invalid_url, Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, ScanActivity::class.java))
+        finish()
     }
 
     override fun downloadCompleted(data: ByteArray) {
