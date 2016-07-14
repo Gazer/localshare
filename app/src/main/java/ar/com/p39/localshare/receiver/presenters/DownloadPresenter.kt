@@ -22,12 +22,19 @@ class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>(
     lateinit var downloadFiles: DownloadList
 
     fun inspectUrl(bssid: String, url: String) {
+        Log.d("Download", "Got url : ($url)")
         if (url.isEmpty()) {
             view()?.showInvalidUrlError()
             return
         }
 
         val uri = Uri.parse(url)
+
+        if (uri.host == null) {
+            view()?.showInvalidUrlError()
+            return
+        }
+
         val baseUrl = "http://${uri.host}:${uri.port}/"
 
         Log.d("Download", "BaseUrl = $baseUrl")
