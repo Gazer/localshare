@@ -28,12 +28,6 @@ class AndroidModule(private val application: Application) {
     }
 
     @Provides
-    @Singleton
-    fun provideDownloadPresenter(client: OkHttpClient): DownloadPresenter {
-        return DownloadPresenter(client)
-    }
-
-    @Provides
     fun provideWifiMananger(): WifiManager {
         return application.getSystemService (Context.WIFI_SERVICE) as WifiManager;
     }

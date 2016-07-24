@@ -6,7 +6,7 @@ import ar.com.p39.localshare.receiver.models.DownloadFile
  * Created by gazer on 5/1/16.
  */
 interface DownloadView {
-    fun connectoToWifi(ssid: String)
+    fun connectToWifi(ssid: String)
 
     fun showFiles(files: List<DownloadFile>)
 

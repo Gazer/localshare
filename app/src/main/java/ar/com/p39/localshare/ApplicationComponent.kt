@@ -18,10 +18,10 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(AndroidModule::class, NetworkModule::class, DeveloperSettingsModule::class))
 interface ApplicationComponent {
     fun inject(myApplication: MyApplication)
-    fun inject(downloadActivity: DownloadActivity)
     fun inject(scanActivity: ScanActivity)
 
     fun plusDeveloperSettingsComponent(): DeveloperSettingsComponent
 
     fun plus(shareActivityModule: ShareActivity.ShareActivityModule): ShareActivity.ShareActivityComponent
+    fun plus(downloadModule: DownloadActivity.DownloadModule): DownloadActivity.DownloadComponent
 }

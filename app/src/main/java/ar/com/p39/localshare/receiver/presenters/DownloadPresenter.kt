@@ -1,6 +1,5 @@
 package ar.com.p39.localshare.receiver.presenters
 
-import android.net.Uri
 import android.util.Log
 import ar.com.p39.localshare.common.presenters.Presenter
 import ar.com.p39.localshare.receiver.models.DownloadFile
@@ -9,45 +8,16 @@ import ar.com.p39.localshare.receiver.network.SharerClient
 import ar.com.p39.localshare.receiver.views.DownloadView
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
-import retrofit2.converter.jackson.JacksonConverterFactory
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.BufferedInputStream
 import java.io.InputStream
 
-class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>() {
+class DownloadPresenter(val client: SharerClient, val httpClient: OkHttpClient) : Presenter<DownloadView>() {
     lateinit var downloadFiles: DownloadList
 
-    fun inspectUrl(bssid: String, url: String) {
-        Log.d("Download", "Got url : ($url)")
-        if (url.isEmpty()) {
-            view()?.showInvalidUrlError()
-            return
-        }
-
-        val uri = Uri.parse(url)
-
-        if (uri.host == null) {
-            view()?.showInvalidUrlError()
-            return
-        }
-
-        val baseUrl = "http://${uri.host}:${uri.port}/"
-
-        Log.d("Download", "BaseUrl = $baseUrl")
-
-        val retrofit = Retrofit.Builder()
-                .addConverterFactory(JacksonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(baseUrl)
-                .client(httpClient)
-                .build()
-
-        val client = retrofit.create(SharerClient::class.java)
-
+    fun inspectUrl(bssid: String) {
         client.getShareInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -55,7 +25,7 @@ class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>(
                         {
                             list: DownloadList ->
                             if (bssid != list.ssid) {
-                                view()?.connectoToWifi(list.ssid)
+                                view()?.connectToWifi(list.ssid)
                             } else {
                                 downloadFiles = list
                                 view()?.showFiles(list.files)
@@ -63,8 +33,8 @@ class DownloadPresenter(val httpClient: OkHttpClient) : Presenter<DownloadView>(
                         },
                         {
                             error ->
-                            Log.e("Download", "Connect failed to $url : $error")
-                            view()?.showError("Connect failed to $url")
+                            Log.e("Download", "Connect failed : $error")
+                            view()?.showError("Connect failed : $error")
                         }
                 )
     }

@@ -14,4 +14,5 @@
     <string name="connect_to_wifi">Please connect to Wifi</string>
     <string name="help_network">Be sure that your friend is connected to the Wifi network \'%s\'</string>
     <string name="invalid_url">The detected url is not valid</string>
+    <string name="connect_to_a_wifi">Need to connect to %s wifi network to continue</string>
 </resources>

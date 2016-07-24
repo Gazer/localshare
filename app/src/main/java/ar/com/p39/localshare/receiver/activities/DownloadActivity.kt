@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.design.widget.Snackbar
@@ -18,17 +19,27 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
+import ar.com.p39.localshare.BuildConfig
 import ar.com.p39.localshare.MyApplication
 import ar.com.p39.localshare.R
 import ar.com.p39.localshare.common.network.WifiSSIDProvider
+import ar.com.p39.localshare.receiver.UriScope
 import ar.com.p39.localshare.receiver.adapters.DownloadFileAdapter
 import ar.com.p39.localshare.receiver.models.DownloadFile
+import ar.com.p39.localshare.receiver.network.SharerClient
 import ar.com.p39.localshare.receiver.presenters.DownloadPresenter
 import ar.com.p39.localshare.receiver.views.DownloadView
 import butterknife.bindView
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.CustomEvent
 import com.squareup.picasso.Picasso
+import dagger.Module
+import dagger.Provides
+import dagger.Subcomponent
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.converter.jackson.JacksonConverterFactory
 import javax.inject.Inject
 
 /**
@@ -58,20 +69,43 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
 
-        MyApplication.graph.inject(this)
+        val baseUrl = readUrlFromIntent()
 
-        setSupportActionBar(toolbar)
+        if (baseUrl != null) {
+            MyApplication.graph.plus(DownloadModule(baseUrl)).inject(this)
 
-        supportActionBar?.title = getString(R.string.title_activity_download)
+            setSupportActionBar(toolbar)
 
+            supportActionBar?.title = getString(R.string.title_activity_download)
+
+            presenter.bindView(this)
+            presenter.inspectUrl(bssidProvider.getBSSID())
+
+            list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            button.setOnClickListener { checkWritePermission() }
+            finish.setOnClickListener { finish() }
+        }
+    }
+
+    private fun readUrlFromIntent(): String? {
         val url = intent.extras.getString("url")
+        Log.d("Download", "Got url : ($url)")
+        if (url.isEmpty()) {
+            showInvalidUrlError()
+            return null
+        }
 
-        presenter.bindView(this)
-        presenter.inspectUrl(bssidProvider.getBSSID(), url)
+        val uri = Uri.parse(url)
 
-        list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        button.setOnClickListener { checkWritePermission() }
-        finish.setOnClickListener { finish() }
+        if (uri.host == null) {
+            showInvalidUrlError()
+            return null
+        }
+
+        val baseUrl = "http://${uri.host}:${uri.port}/"
+
+        Log.d("Download", "BaseUrl = $baseUrl")
+        return baseUrl
     }
 
     private fun checkWritePermission() {
@@ -80,7 +114,7 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-                showError("To be able to save the imagen to your device we need write permission")
+                showError("To be able to save the images to your device we need write permission")
             } else {
                 // No explanation needed, we can request the permission.
 
@@ -110,8 +144,8 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
         super.onDestroy()
     }
 
-    override fun connectoToWifi(ssid: String) {
-        Snackbar.make(list, "Need to connecto to $ssid wifi network to continue", Snackbar.LENGTH_SHORT).show()
+    override fun connectToWifi(ssid: String) {
+        Snackbar.make(list, getString(R.string.connect_to_a_wifi, ssid), Snackbar.LENGTH_SHORT).show()
     }
 
     override fun showFiles(files: List<DownloadFile>) {
@@ -157,10 +191,41 @@ class DownloadActivity : AppCompatActivity(), DownloadView {
         finish.visibility = View.VISIBLE
         button.visibility = View.GONE
 
-        Answers.getInstance().logCustom(CustomEvent("Files Downloaded").putCustomAttribute("Count", adapter?.itemCount));
+        if (!BuildConfig.DEBUG) {
+            Answers.getInstance().logCustom(CustomEvent("Files Downloaded").putCustomAttribute("Count", adapter?.itemCount));
+        }
     }
 
     companion object {
         val WRITE_EXTERNAL_STORAGE = 1
     }
+
+    @UriScope
+    @Subcomponent(modules = arrayOf(DownloadModule::class))
+    interface DownloadComponent {
+        fun inject(downloadActivity: DownloadActivity)
+    }
+
+    @Module
+    class DownloadModule(val baseUrl:String) {
+        @Provides
+        @UriScope
+        fun providesSharerClient(httpClient: OkHttpClient): SharerClient {
+            val retrofit = Retrofit.Builder()
+                    .addConverterFactory(JacksonConverterFactory.create())
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .baseUrl(baseUrl)
+                    .client(httpClient)
+                    .build()
+
+            return retrofit.create(SharerClient::class.java)
+        }
+
+        @Provides
+        @UriScope
+        fun providesDownloadPresenter(client: SharerClient, okHttpClient: OkHttpClient): DownloadPresenter {
+            return DownloadPresenter(client, okHttpClient)
+        }
+    }
+
 }
